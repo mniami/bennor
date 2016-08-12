@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Footballer.CSharp.Plugins", "Footballer.CSharp.Plugins.csproj", "{A9D6A566-E2F0-59BC-F093-5E03C78B5498}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Footballer.CSharp", "Footballer.CSharp.csproj", "{628316E3-FF60-A6FA-4AF9-2A3919332DC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Footballer.CSharp.Editor", "Footballer.CSharp.Editor.csproj", "{706C0FC5-6709-0AA6-1389-33591A4B358E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9D6A566-E2F0-59BC-F093-5E03C78B5498}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9D6A566-E2F0-59BC-F093-5E03C78B5498}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9D6A566-E2F0-59BC-F093-5E03C78B5498}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9D6A566-E2F0-59BC-F093-5E03C78B5498}.Release|Any CPU.Build.0 = Release|Any CPU
+		{628316E3-FF60-A6FA-4AF9-2A3919332DC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{628316E3-FF60-A6FA-4AF9-2A3919332DC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{628316E3-FF60-A6FA-4AF9-2A3919332DC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{628316E3-FF60-A6FA-4AF9-2A3919332DC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{706C0FC5-6709-0AA6-1389-33591A4B358E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{706C0FC5-6709-0AA6-1389-33591A4B358E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{706C0FC5-6709-0AA6-1389-33591A4B358E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{706C0FC5-6709-0AA6-1389-33591A4B358E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
