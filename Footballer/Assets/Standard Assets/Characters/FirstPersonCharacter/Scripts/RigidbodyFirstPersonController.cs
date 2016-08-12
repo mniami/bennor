@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
+using UnityStandardAssets.Vehicles.Ball;
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {
@@ -86,6 +87,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
         public MovementSettings movementSettings = new MovementSettings();
         public MouseLook mouseLook = new MouseLook();
         public AdvancedSettings advancedSettings = new AdvancedSettings();
+        public float shotRadius;
+        public float weakPowerShot;
+        public float strongPowerShot;
 
 
         private Rigidbody m_RigidBody;
@@ -93,6 +97,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_YRotation;
         private Vector3 m_GroundContactNormal;
         private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded;
+
 
 
         public Vector3 Velocity
@@ -146,7 +151,37 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             GroundCheck();
             Vector2 input = GetInput();
-            
+            var ball = GameObject.Find("ball");
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                var colliders = Physics.OverlapSphere(transform.position, shotRadius);
+                foreach (var coll in colliders)
+                {
+                    if (coll.gameObject == ball)
+                    {
+                        ball.GetComponent<Rigidbody>().AddForce(new Vector3(transform.forward.x * weakPowerShot, 0, transform.forward.z * weakPowerShot), ForceMode.Impulse);
+                        break;
+                    }
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                var colliders = Physics.OverlapSphere(transform.position, shotRadius);
+                foreach (var coll in colliders)
+                {
+                    if (coll.gameObject == ball)
+                    {
+                        ball.GetComponent<Rigidbody>().AddForce(new Vector3(transform.forward.x * strongPowerShot, 1f, transform.forward.z * strongPowerShot), ForceMode.Impulse);
+                        break;
+                    }
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                ball.GetComponent<Rigidbody>().position = transform.position + transform.forward;
+            }
+
             if ((Mathf.Abs(input.x) > float.Epsilon || Mathf.Abs(input.y) > float.Epsilon) && (advancedSettings.airControl || m_IsGrounded))
             {
                 // always move along the camera forward as it is the direction that it being aimed at
