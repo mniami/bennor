@@ -39,10 +39,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
 				}
 				if (input.y > 0)
 				{
-					//forwards
-					//handled last as if strafing and moving forward at the same time forwards speed should take precedence
-					CurrentTargetSpeed = ForwardSpeed;
-				}
+                    //forwards
+                    //handled last as if strafing and moving forward at the same time forwards speed should take precedence
+
+#if MOBILE_INPUT
+                    CurrentTargetSpeed = ForwardSpeed / 3 + ForwardSpeed * Input.acceleration.y * 5;
+#else
+                    CurrentTargetSpeed = ForwardSpeed;
+#endif
+                }
 #if !MOBILE_INPUT
 	            if (Input.GetKey(RunKey))
 	            {
@@ -141,24 +146,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             GroundCheck();
             Vector2 input = GetInput();
-
-            float xInput = 0f;
-            float yInput = 0f;
             
-
-            if (SystemInfo.deviceType == DeviceType.Desktop)
-            {
-                xInput = Math.Abs(input.x);
-                yInput = Math.Abs(input.y);
-            }
-            else
-            {
-                xInput = Math.Abs(Input.acceleration.y);
-                yInput = Math.Abs(Input.acceleration.y);
-                input = new Vector2(Input.acceleration.x, Input.acceleration.y);
-            }
-            
-            if ((xInput > float.Epsilon || yInput > float.Epsilon) && (advancedSettings.airControl || m_IsGrounded))
+            if ((Mathf.Abs(input.x) > float.Epsilon || Mathf.Abs(input.y) > float.Epsilon) && (advancedSettings.airControl || m_IsGrounded))
             {
                 // always move along the camera forward as it is the direction that it being aimed at
                 Vector3 desiredMove = cam.transform.forward*input.y + cam.transform.right*input.x;
@@ -186,7 +175,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     m_Jumping = true;
                 }
 
-                if (!m_Jumping && xInput < float.Epsilon && yInput < float.Epsilon && m_RigidBody.velocity.magnitude < 1f)
+                if (!m_Jumping && Mathf.Abs(input.x) < float.Epsilon && Mathf.Abs(input.y) < float.Epsilon && m_RigidBody.velocity.magnitude < 1f)
                 {
                     m_RigidBody.Sleep();
                 }
@@ -227,12 +216,34 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private Vector2 GetInput()
         {
-            
-            Vector2 input = new Vector2
+            Vector2 input;
+
+            if (SystemInfo.deviceType == DeviceType.Desktop)
+            {
+                input = new Vector2
                 {
                     x = CrossPlatformInputManager.GetAxis("Horizontal"),
                     y = CrossPlatformInputManager.GetAxis("Vertical")
                 };
+            }
+            else
+            {
+                float x = 0f;
+                float y = 0f;
+                if (Input.acceleration.x > 0.1f)
+                {
+                    x = Input.acceleration.x;
+                }
+                if (Input.acceleration.y > 0.1f)
+                {
+                    y = Input.acceleration.y;
+                }
+                input = new Vector2
+                {
+                    x = x,
+                    y = y + 0.5f
+                };
+            }
 			movementSettings.UpdateDesiredTargetSpeed(input);
             return input;
         }

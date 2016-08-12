@@ -30,9 +30,19 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         public void LookRotation(Transform character, Transform camera)
         {
-            float yRot = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;
-            float xRot = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
+            float yRot = 0f;
+            float xRot = 0f;
 
+            if (SystemInfo.deviceType == DeviceType.Desktop)
+            {
+                yRot = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;
+                xRot = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
+            }
+            else
+            {
+                yRot = Input.GetTouch(0).deltaPosition.x * XSensitivity;
+                xRot = Input.GetTouch(0).deltaPosition.y * YSensitivity;
+            }
             m_CharacterTargetRot *= Quaternion.Euler (0f, yRot, 0f);
             m_CameraTargetRot *= Quaternion.Euler (-xRot, 0f, 0f);
 
@@ -78,9 +88,17 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 m_cursorIsLocked = false;
             }
-            else if(Input.GetMouseButtonUp(0))
+            else if (SystemInfo.deviceType == DeviceType.Desktop)
             {
-                m_cursorIsLocked = true;
+                if (Input.GetMouseButtonUp(0))
+                    m_cursorIsLocked = true;
+            }
+            else
+            {
+                if (Input.GetTouch(0).fingerId <= 0)
+                {
+                    m_cursorIsLocked = true;
+                }
             }
 
             if (m_cursorIsLocked)
