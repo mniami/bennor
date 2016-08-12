@@ -87,9 +87,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         public MovementSettings movementSettings = new MovementSettings();
         public MouseLook mouseLook = new MouseLook();
         public AdvancedSettings advancedSettings = new AdvancedSettings();
-        public float shotRadius;
-        public float weakPowerShot;
-        public float strongPowerShot;
+        public float shotRadius, weakPowerShot, strongPowerShot, kickPower;
 
 
         private Rigidbody m_RigidBody;
@@ -153,33 +151,28 @@ namespace UnityStandardAssets.Characters.FirstPerson
             Vector2 input = GetInput();
             var ball = GameObject.Find("ball");
 
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.R))
             {
-                var colliders = Physics.OverlapSphere(transform.position, shotRadius);
-                foreach (var coll in colliders)
+                if (IsBallInRange(ball))
                 {
-                    if (coll.gameObject == ball)
+                    if (Input.GetKeyDown(KeyCode.E))
                     {
                         ball.GetComponent<Rigidbody>().AddForce(new Vector3(transform.forward.x * weakPowerShot, 0, transform.forward.z * weakPowerShot), ForceMode.Impulse);
-                        break;
                     }
-                }
-            }
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                var colliders = Physics.OverlapSphere(transform.position, shotRadius);
-                foreach (var coll in colliders)
-                {
-                    if (coll.gameObject == ball)
+                    if (Input.GetKeyDown(KeyCode.Q))
                     {
                         ball.GetComponent<Rigidbody>().AddForce(new Vector3(transform.forward.x * strongPowerShot, 1f, transform.forward.z * strongPowerShot), ForceMode.Impulse);
-                        break;
+                    }
+                    if (Input.GetKeyDown(KeyCode.R) && ball.transform.position.y < 3.5f)
+                    {
+                        ball.GetComponent<Rigidbody>().AddForce(new Vector3(0, kickPower, 0), ForceMode.Impulse);
+                        ball.GetComponent<Rigidbody>().AddTorque(new Vector3(ball.transform.forward.x, ball.transform.forward.y, ball.transform.forward.z), ForceMode.Impulse);
                     }
                 }
             }
             if (Input.GetKeyDown(KeyCode.G))
             {
-                ball.GetComponent<Rigidbody>().position = transform.position + transform.forward;
+                ball.GetComponent<Rigidbody>().position = new Vector3(transform.position.x + transform.lossyScale.x, transform.position.y - transform.lossyScale.y, transform.position.z + transform.lossyScale.z);
             }
 
             if ((Mathf.Abs(input.x) > float.Epsilon || Mathf.Abs(input.y) > float.Epsilon) && (advancedSettings.airControl || m_IsGrounded))
@@ -226,6 +219,18 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_Jump = false;
         }
 
+        private bool IsBallInRange(GameObject ball)
+        {
+            var colliders = Physics.OverlapSphere(transform.position, shotRadius);
+            foreach (var coll in colliders)
+            {
+                if (coll.gameObject == ball)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         private float SlopeMultiplier()
         {
